@@ -31,8 +31,21 @@ public class DateRange {
 
     public Boolean overlaps(DateRange other) {
         // TODO: implement date range intersection checking
-        assert false;
-        return null;
+        if (other.getStart().equals(this.start)) {
+            return true;
+        }
+        else if (other.getEnd().equals(this.end)) {
+            return true;
+        }
+        else if( ( other.getStart().isAfter(this.start) ) && ( other.getStart().isBefore(this.end) )) {
+            return true;
+        }
+        else if( ( other.getEnd().isAfter(this.start) ) && ( other.getEnd().isBefore(this.end) )) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     @Override
