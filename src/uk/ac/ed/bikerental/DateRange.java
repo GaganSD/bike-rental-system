@@ -7,16 +7,16 @@ import java.util.function.BooleanSupplier;
 
 public class DateRange {
     private LocalDate start, end;
-    
+
     public DateRange(LocalDate start, LocalDate end) {
         this.start = start;
         this.end = end;
     }
-    
+
     public LocalDate getStart() {
         return this.start;
     }
-    
+
     public LocalDate getEnd() {
         return this.end;
     }
@@ -33,17 +33,13 @@ public class DateRange {
         // TODO: implement date range intersection checking
         if (other.getStart().equals(this.start)) {
             return true;
-        }
-        else if (other.getEnd().equals(this.end)) {
+        } else if (other.getEnd().equals(this.end)) {
             return true;
-        }
-        else if( ( other.getStart().isAfter(this.start) ) && ( other.getStart().isBefore(this.end) )) {
+        } else if ((other.getStart().isAfter(this.start)) && (other.getStart().isBefore(this.end))) {
             return true;
-        }
-        else if( ( other.getEnd().isAfter(this.start) ) && ( other.getEnd().isBefore(this.end) )) {
+        } else if ((other.getEnd().isAfter(this.start)) && (other.getEnd().isBefore(this.end))) {
             return true;
-        }
-        else {
+        } else {
             return false;
         }
     }
@@ -66,11 +62,10 @@ public class DateRange {
         DateRange other = (DateRange) obj;
         return Objects.equals(end, other.end) && Objects.equals(start, other.start);
     }
-    
 
     public Boolean isInDateRange(LocalDate id) {
         // TODO: implement this feature
-        
+        return true;
     }
     // You can add your own methods here
 }
