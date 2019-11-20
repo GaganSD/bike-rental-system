@@ -67,5 +67,10 @@ public class DateRange {
         return Objects.equals(end, other.end) && Objects.equals(start, other.start);
     }
     
+
+    public Boolean isInDateRange(LocalDate id) {
+        // TODO: implement this feature
+        
+    }
     // You can add your own methods here
 }

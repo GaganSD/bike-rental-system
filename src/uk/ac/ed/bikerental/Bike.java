@@ -9,12 +9,9 @@ public class Bike {
     // public enum 
     
     public String getType() {
-    //public BikeType getType() {
-        // TODO: Implement Bike.getType
         
-        //assert false;
         
-        return super.name;
+        return myBikeType.name;
     }
 
     public Boolean isAvailable(DateRange dr) {
@@ -23,7 +20,6 @@ public class Bike {
         return false;
     }
 
-    public String 
 
 
 

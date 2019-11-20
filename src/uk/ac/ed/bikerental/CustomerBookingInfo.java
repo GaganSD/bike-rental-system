@@ -1,3 +1,6 @@
+package uk.ac.ed.bikerental;
+
+
 public class CustomerBookingInfo {
 
     public String firstName;
@@ -18,7 +21,4 @@ public class CustomerBookingInfo {
         this.surname = surname;
         this.collectionMethod = collectionMethod;
     }
-
-
-
 }
