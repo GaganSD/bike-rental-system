@@ -30,14 +30,17 @@ public class DateRange {
     }
 
     public Boolean overlaps(DateRange other) {
-        // TODO: implement date range intersection checking
         if (other.getStart().equals(this.start)) {
             return true;
         } else if (other.getEnd().equals(this.end)) {
             return true;
         } else if ((other.getStart().isAfter(this.start)) && (other.getStart().isBefore(this.end))) {
             return true;
+        } else if ((this.getStart().isAfter(other.start)) && (this.getStart().isBefore(other.end))) {
+            return true;
         } else if ((other.getEnd().isAfter(this.start)) && (other.getEnd().isBefore(this.end))) {
+            return true;
+        } else if ((this.getEnd().isAfter(other.start)) && (this.getEnd().isBefore(other.end))) {
             return true;
         } else {
             return false;
@@ -62,10 +65,4 @@ public class DateRange {
         DateRange other = (DateRange) obj;
         return Objects.equals(end, other.end) && Objects.equals(start, other.start);
     }
-
-    public Boolean isInDateRange(LocalDate id) {
-        // TODO: implement this feature
-        return true;
-    }
-    // You can add your own methods here
 }

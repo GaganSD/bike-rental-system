@@ -10,6 +10,14 @@ public class Location {
         this.address = address;
     }
 
+    public String getPostcode() {
+        return postcode;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
     /**
      * This method is used to compare if two addresses are close enough to allow
      * delivery/collection of bikes
@@ -25,14 +33,4 @@ public class Location {
         }
         return false;
     }
-
-    public String getPostcode() {
-        return postcode;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    // You can add your own methods here
 }

@@ -18,7 +18,11 @@ public class SystemTests {
     // You can add attributes here
     public Database database;
     public Customer customer1;
-    public BikeProvider bikeProvider1;
+    public BikeProvider bikeProviderA;
+
+    public BikeType hybrid = new BikeType("hybrid");
+    public BikeType commute = new BikeType("commute");
+    public BikeType mountain = new BikeType("mountain");
 
     @BeforeEach
     void setUp() throws Exception {
@@ -28,66 +32,90 @@ public class SystemTests {
         // Put your test setup here
         database = new Database();
 
+        // Mock data setup
         customer1 = new Customer();
         database.addCustomer(customer1);
 
-        BikeType hybrid = new BikeType("hybrid");
-        BikeType commute = new BikeType("commute");
-        BikeType mountain = new BikeType("mountain");
+        CustomerBookingInfo bookingInfo1 = new CustomerBookingInfo("name", "phone", new Location("EH1AAA", "address1"),
+                "surname", DeliveryMethod.DELIVERY_DRIVER, DeliveryMethod.CUSTOMER);
 
         database.addBikeType(hybrid);
         database.addBikeType(commute);
         database.addBikeType(mountain);
 
-        // included in test case result
+        BikeProvider bikeProviderA = new BikeProvider(new Location("EH2AAA", "addressA"));
+
+        // BikeProviderA bikes
+        // Hybrid booked during 26-27 Nov
         Bike bikeA1 = new Bike("bikeA1", hybrid);
-        Booking bookingA1_1 = new Booking(new DateRange(LocalDate.of(2019, 11, 26), LocalDate.of(2019, 11, 27)));
-        Booking bookingA1_2 = new Booking(new DateRange(LocalDate.of(2019, 12, 1), LocalDate.of(2019, 12, 2)));
+        Booking bookingA1_1 = new Booking(bikeProviderA.getUUID(), bookingInfo1,
+                new DateRange(LocalDate.of(2019, 11, 26), LocalDate.of(2019, 11, 27)));
         bikeA1.addBooking(bookingA1_1);
-        bikeA1.addBooking(bookingA1_2);
 
-        // included in test case result
+        // Commute booked during 1-2 Dec
         Bike bikeA2 = new Bike("bikeA2", commute);
-        Booking bookingA2_1 = new Booking(new DateRange(LocalDate.of(2019, 11, 26), LocalDate.of(2019, 11, 27)));
-        Booking bookingA2_2 = new Booking(new DateRange(LocalDate.of(2019, 12, 1), LocalDate.of(2019, 12, 2)));
+        Booking bookingA2_1 = new Booking(bikeProviderA.getUUID(), bookingInfo1,
+                new DateRange(LocalDate.of(2019, 12, 1), LocalDate.of(2019, 12, 2)));
         bikeA2.addBooking(bookingA2_1);
-        bikeA2.addBooking(bookingA2_2);
 
-        // not included in test case result because booked during dateRange
+        // Commute booked during 3-4 Dec
         Bike bikeA3 = new Bike("bikeA3", commute);
-        Booking bookingA3_1 = new Booking(new DateRange(LocalDate.of(2019, 11, 28), LocalDate.of(2019, 11, 29)));
+        Booking bookingA3_1 = new Booking(bikeProviderA.getUUID(), bookingInfo1,
+                new DateRange(LocalDate.of(2019, 12, 3), LocalDate.of(2019, 12, 3)));
         bikeA3.addBooking(bookingA3_1);
 
-        // not included in test case result because of bike type
+        // Mountain
         Bike bikeA4 = new Bike("bikeA4", mountain);
-        Booking bookingA4_1 = new Booking(new DateRange(LocalDate.of(2019, 11, 26), LocalDate.of(2019, 11, 27)));
-        bikeA4.addBooking(bookingA4_1);
 
-        // included in test case result
-        Location locationA = new Location("EH1AAA", "bikeProvider1");
-        Collection<Bike> bikesA = new ArrayList<>();
-        bikesA.add(bikeA1);
-        bikesA.add(bikeA2);
-        bikesA.add(bikeA3);
-        bikesA.add(bikeA4);
-        BikeProvider bikeProviderA = new BikeProvider(locationA, bikesA);
-
+        bikeProviderA.addBike(bikeA1);
+        bikeProviderA.addBike(bikeA2);
+        bikeProviderA.addBike(bikeA3);
+        bikeProviderA.addBike(bikeA4);
         database.addBikeProvider(bikeProviderA);
+
+        BikeProvider bikeProviderB = new BikeProvider(new Location("EH2AAA", "addressA"));
+
+        // BikeProviderB bikes
+        // Hybrid booked during 26-27 Nov
+        Bike bikeB1 = new Bike("bikeB1", hybrid);
+        Booking bookingB1_1 = new Booking(bikeProviderB.getUUID(), bookingInfo1,
+                new DateRange(LocalDate.of(2019, 11, 26), LocalDate.of(2019, 11, 27)));
+        bikeB1.addBooking(bookingB1_1);
+
+        // Commute booked during 1-2 Dec
+        Bike bikeB2 = new Bike("bikeB2", commute);
+        Booking bookingB2_1 = new Booking(bikeProviderB.getUUID(), bookingInfo1,
+                new DateRange(LocalDate.of(2019, 12, 1), LocalDate.of(2019, 12, 2)));
+        bikeB2.addBooking(bookingB2_1);
+
+        bikeProviderB.addBike(bikeB1);
+        bikeProviderB.addBike(bikeB2);
+        database.addBikeProvider(bikeProviderB);
+
+        // In different location than the customer
+        BikeProvider bikeProviderC = new BikeProvider(new Location("GG2AAA", "addressA"));
+
+        // BikeProviderC bikes
+        // Hybrid booked during 26-27 Nov
+        Bike bikeC1 = new Bike("bikeB1", hybrid);
+
+        bikeProviderC.addBike(bikeC1);
+        database.addBikeProvider(bikeProviderC);
     }
 
-    // TODO: Write system tests covering the three main use cases
-
     @Test
-    void findQuoteTest() {
+    void getQuotesTest() {
         DateRange dateRange = new DateRange(LocalDate.of(2019, 11, 28), LocalDate.of(2019, 11, 30));
         Location location = new Location("EH1AAA", "address1");
-        Map<BikeType, Integer> numOfBikes = new HashMap<>();
-        numOfBikes.put(new BikeType("hybrid"), 1);
-        numOfBikes.put(new BikeType("hybrid"), 2);
 
-        // 1 hybrid, 2 commute bikes from 28-30 Nov 2019
+        Map<String, Integer> numOfBikes = new HashMap<>();
+        numOfBikes.put(hybrid.toString(), 1);
+        numOfBikes.put(commute.toString(), 2);
+
         Request request = new Request(dateRange, location, numOfBikes);
 
         Collection<Quote> quotes = customer1.getQuotes(request, database);
+
+        assert (quotes.size() == 1);
     }
 }

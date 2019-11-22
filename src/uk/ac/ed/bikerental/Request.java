@@ -6,9 +6,9 @@ import java.util.Map;
 public class Request {
     private DateRange dateRange;
     private Location location;
-    private Map<BikeType, Integer> numOfBikes;
+    private Map<String, Integer> numOfBikes;
 
-    public Request(DateRange dateRange, Location location, Map<BikeType, Integer> numOfBikes) {
+    public Request(DateRange dateRange, Location location, Map<String, Integer> numOfBikes) {
         this.dateRange = dateRange;
         this.location = location;
         this.numOfBikes = numOfBikes;
@@ -22,13 +22,12 @@ public class Request {
         return this.location;
     }
 
-    public Map<BikeType, Integer> getNumOfBikes() {
+    public Map<String, Integer> getNumOfBikes() {
         return this.numOfBikes;
     }
 
+    // this method is not need according to coursework 3
     public void extendRange(Integer days) {
-        // TODO: implement this method
-
         return;
     }
 }

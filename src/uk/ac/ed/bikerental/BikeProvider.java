@@ -1,12 +1,14 @@
 package uk.ac.ed.bikerental;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class BikeProvider {
-
+    private String uuid;
     private String name;
     private Location location;
     private String phoneNumber;
@@ -18,9 +20,13 @@ public class BikeProvider {
     private Map<BikeType, Map<String, Integer>> depositPolicy = new HashMap<>();
 
     // constructor with only fields relevant to testing
-    public BikeProvider(Location location, Collection<Bike> bikes) {
+    public BikeProvider(Location location) {
+        this.uuid = UUID.randomUUID().toString();
         this.location = location;
-        this.bikes = bikes;
+    }
+
+    public String getUUID() {
+        return this.uuid;
     }
 
     public Location getLocation() {
@@ -35,16 +41,31 @@ public class BikeProvider {
         bikes.add(bike);
     }
 
-    public void registerOriginalBikeReturn(String serialNo) {
-        // TODO: implement this method
+    public void registerBikeReturn(String bookingID) {
+        // get first 36 characters
+        String bikeProviderUUID = bookingID.substring(0, 35);
 
-        return;
+        // returned to original bike provider
+        if (bikeProviderUUID == this.uuid) {
+            for (Bike bike : bikes) {
+                bike.setStatus(BikeStatus.IN_STORE);
+            }
+            return;
+        }
+
+        // returned to partner bike provider
+        for (BikeProvider partner : partners) {
+            if (bikeProviderUUID == partner.getUUID()) {
+                DeliveryService deliveryService = DeliveryServiceFactory.getDeliveryService();
+
+                for (Bike bike : partner.getBikes()) {
+                    bike.setStatus(BikeStatus.IN_PARTNER_STORE);
+                    deliveryService.scheduleDelivery(bike, this.location, partner.location, LocalDate.now());
+                }
+                return;
+            }
+        }
+
+        assert (false);
     }
-
-    public void registerPartnerBikeReturn(String serialNo) {
-        // TODO: implement this method
-
-        return;
-    }
-
 }

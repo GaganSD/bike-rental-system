@@ -4,11 +4,21 @@ import java.math.BigDecimal;
 import java.util.Objects;
 
 public class BikeType {
-    protected String name;
-    protected BigDecimal replacementValue;
+    private String name;
+    private BigDecimal replacementValue;
 
     public BikeType(String name) {
         this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        return this.name;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.name.hashCode();
     }
 
     @Override
@@ -20,7 +30,7 @@ public class BikeType {
         if (getClass() != obj.getClass())
             return false;
         BikeType other = (BikeType) obj;
-        return Objects.equals(name, other.name);
+        return name.equals(other.name);
     }
 
     public BigDecimal getReplacementValue() {

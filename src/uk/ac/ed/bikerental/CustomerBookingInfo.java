@@ -1,24 +1,32 @@
 package uk.ac.ed.bikerental;
 
-
 public class CustomerBookingInfo {
+    private String firstName;
+    private String phoneNum;
+    private Location location;
+    private String surname;
+    private DeliveryMethod collectionMethod;
+    private DeliveryMethod returnMethod;
 
-    public String firstName;
-    public String phoneNum;
-    public String postCode;
-    public String address;
-    public String surname;
-    public String collectionMethod;
-
-
-    public CustomerBookingInfo(String firstName,String phoneNum,
-                String postCode, String address,String surname,String collectionMethod) {
+    public CustomerBookingInfo(String firstName, String phoneNum, Location location, String surname,
+            DeliveryMethod collectionMethod, DeliveryMethod returnMethod) {
 
         this.firstName = firstName;
         this.phoneNum = phoneNum;
-        this.postCode = postCode;
-        this.address = address;
+        this.location = location;
         this.surname = surname;
         this.collectionMethod = collectionMethod;
+    }
+
+    public Location getLocation() {
+        return this.location;
+    }
+
+    public DeliveryMethod getCollectionMethod() {
+        return this.collectionMethod;
+    }
+
+    public DeliveryMethod getReturnMethod() {
+        return this.returnMethod;
     }
 }

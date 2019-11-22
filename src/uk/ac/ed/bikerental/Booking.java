@@ -11,7 +11,16 @@ public class Booking {
     private String returnMethod;
     private DateRange dateRange;
 
-    public Booking(DateRange dateRange) {
-        this.uniqueID = UUID.randomUUID().toString();
+    public Booking(String bikeProivderUUID, CustomerBookingInfo bookingInfo, DateRange dateRange) {
+        this.uniqueID = bikeProivderUUID + UUID.randomUUID().toString();
+        this.dateRange = dateRange;
+    }
+
+    public String getUniqueID() {
+        return this.uniqueID;
+    }
+
+    public DateRange getDateRange() {
+        return this.dateRange;
     }
 }

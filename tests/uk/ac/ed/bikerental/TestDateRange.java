@@ -13,12 +13,9 @@ class TestDateRange {
     @BeforeEach
     void setUp() throws Exception {
         // Setup resources before each test
-        this.dateRange1 = new DateRange(LocalDate.of(2019, 1, 7),
-                LocalDate.of(2019, 1, 10));
-        this.dateRange2 = new DateRange(LocalDate.of(2019, 1, 5),
-                LocalDate.of(2019, 1, 23));
-        this.dateRange3 = new DateRange(LocalDate.of(2015, 1, 7),
-                LocalDate.of(2018, 1, 10));
+        this.dateRange1 = new DateRange(LocalDate.of(2019, 1, 7), LocalDate.of(2019, 1, 10));
+        this.dateRange2 = new DateRange(LocalDate.of(2019, 1, 5), LocalDate.of(2019, 1, 23));
+        this.dateRange3 = new DateRange(LocalDate.of(2015, 1, 1), LocalDate.of(2018, 1, 6));
     }
 
     // Sample JUnit tests checking toYears works
@@ -34,15 +31,13 @@ class TestDateRange {
 
     @Test
     void testOverlapsTrue() {
-        // TODO: check we can see when two date ranges overlap
-        fail();
+        assert (dateRange1.overlaps(dateRange2));
+        assert (dateRange2.overlaps(dateRange1));
     }
 
     @Test
     void testOverlapsFalse() {
-        // TODO: check we can see when two date ranges  don't overlap
-        fail();
+        assert (!dateRange1.overlaps(dateRange3));
+        assert (!dateRange3.overlaps(dateRange1));
     }
-
-    // TODO: put some of your own unit tests here
 }
