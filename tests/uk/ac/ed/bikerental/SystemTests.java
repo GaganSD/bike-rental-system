@@ -117,5 +117,19 @@ public class SystemTests {
         Collection<Quote> quotes = customer1.getQuotes(request, database);
 
         assert (quotes.size() == 1);
+
+        for (Quote quote : quotes) {
+            BikeProvider bikeProvider = quote.getBikeProvider();
+
+            // Check that bike provider is near to customer location
+            assert (bikeProvider.getLocation().isNearTo(location));
+
+            // Check if bike is not already booked
+            for (Bike bike : bikeProvider.getBikes()) {
+                for (Booking booking : bike.getBookings()) {
+                    assert (!(booking.getDateRange().overlaps(dateRange)));
+                }
+            }
+        }
     }
 }
