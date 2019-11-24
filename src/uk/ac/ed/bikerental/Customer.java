@@ -1,8 +1,11 @@
 package uk.ac.ed.bikerental;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.UUID;
@@ -17,6 +20,10 @@ public class Customer {
 
     public String getUuid() {
         return this.uuid;
+    }
+
+    public Collection<Booking> getBookings() {
+        return this.bookings;
     }
 
     /**
@@ -39,6 +46,11 @@ public class Customer {
                 // to keep track of whether bike provider has all bikes required
                 Map<String, Integer> numOfBikesRequired = new HashMap<>(request.getNumOfBikes());
 
+                BigDecimal totalPrice = new BigDecimal(0);
+                BigDecimal totalDeposit = new BigDecimal(0);
+
+                long totalDays = request.getDateRange().toDays() + 1;
+
                 for (Bike bike : bikes) {
                     if (bike.isAvailable(request.getDateRange())) {
                         BikeType bikeType = bike.getBikeType();
@@ -48,6 +60,18 @@ public class Customer {
 
                         if (bikesRequired > 0) {
                             availableBikes.add(bike);
+
+                            // add to totalPrice and totalDeposit
+                            BigDecimal dailyRentalPrice = bikeProvider.getRentalPrice(bikeType);
+                            BigDecimal totalRentalPrice = dailyRentalPrice.multiply(new BigDecimal(totalDays));
+
+                            totalPrice = totalPrice.add(totalRentalPrice);
+
+                            // use BigDecimal.valueOf() for constructing from doubles
+                            BigDecimal deposit = bikeType.getReplacementValue()
+                                    .multiply(BigDecimal.valueOf(bikeProvider.getDepositRate() / 100));
+                            totalDeposit = totalDeposit.add(deposit);
+
                             // decrement num of bikes required of this type
                             numOfBikesRequired.put(bikeType.toString(), bikesRequired - 1);
                         }
@@ -58,8 +82,8 @@ public class Customer {
                 boolean hasAllRequiredBikes = Collections.frequency(numOfBikesRequired.values(),
                         0) == numOfBikesRequired.size();
                 if (hasAllRequiredBikes) {
-                    // TODO: Calculate totalPrice, totalDeposit
-                    Quote quote = new Quote(bikeProvider, availableBikes, 0, 0);
+                    Quote quote = new Quote(bikeProvider, availableBikes, request.getDateRange(), totalPrice,
+                            totalDeposit);
                     quotes.add(quote);
                 }
             }
@@ -70,6 +94,7 @@ public class Customer {
 
     public Booking bookQuote(CustomerBookingInfo bookingInfo, Quote quote) {
         BikeProvider bikeProvider = quote.getBikeProvider();
+
         Booking newBooking = new Booking(bikeProvider.getUUID(), bookingInfo, quote.getDateRange());
 
         DeliveryService deliveryService = DeliveryServiceFactory.getDeliveryService();
@@ -84,7 +109,7 @@ public class Customer {
 
                     if (bookingInfo.getCollectionMethod() == DeliveryMethod.DELIVERY_DRIVER) {
                         deliveryService.scheduleDelivery(bike, bikeProviderLocation, customerLocation,
-                                newBooking.getDateRange().getStart());
+                                quote.getDateRange().getStart());
                     }
 
                     if (bookingInfo.getReturnMethod() == DeliveryMethod.DELIVERY_DRIVER) {

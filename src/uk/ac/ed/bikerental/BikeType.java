@@ -7,8 +7,13 @@ public class BikeType {
     private String name;
     private BigDecimal replacementValue;
 
-    public BikeType(String name) {
+    public BikeType(String name, BigDecimal replacementValue) {
         this.name = name;
+        this.replacementValue = replacementValue;
+    }
+
+    public BigDecimal getReplacementValue() {
+        return this.replacementValue;
     }
 
     @Override
@@ -32,11 +37,4 @@ public class BikeType {
         BikeType other = (BikeType) obj;
         return name.equals(other.name);
     }
-
-    public BigDecimal getReplacementValue() {
-        // TODO: Implement Bike.getReplacementValue
-        assert false;
-        return replacementValue;
-    }
-
 }

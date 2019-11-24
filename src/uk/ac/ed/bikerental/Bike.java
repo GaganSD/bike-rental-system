@@ -13,6 +13,7 @@ public class Bike implements Deliverable {
     public Bike(String serialNo, BikeType bikeType) {
         this.serialNo = serialNo;
         this.bikeType = bikeType;
+        this.status = BikeStatus.IN_STORE;
     }
 
     public BikeStatus getStatus() {
@@ -45,13 +46,18 @@ public class Bike implements Deliverable {
     }
 
     @Override
+    public String toString() {
+        return this.serialNo;
+    }
+
+    @Override
     public void onPickup() {
         this.status = BikeStatus.OUT_FOR_DELIVERY;
     }
 
     @Override
     public void onDropoff() {
-        // this.status = Bike
+        this.status = BikeStatus.IN_STORE;
     }
 
     @Override
