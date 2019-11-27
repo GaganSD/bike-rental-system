@@ -17,7 +17,9 @@ public class LinearDeprecation implements ValuationPolicy {
         // 
         double deprecationRate = 3;
         
-        replacementVal =  replacementVal - replacementVal.multiply(BigDecimal.valueOf(deprecationRate/100)).multiply(BigDecimal.valueOf(period.getYears()));
+        replacementVal =  replacementVal.subtract(
+            replacementVal.multiply(BigDecimal.valueOf(deprecationRate/100)).multiply(
+                BigDecimal.valueOf(  period.getYears() )));
 
         bike.getBikeType().setReplacementValue(replacementVal);
 
