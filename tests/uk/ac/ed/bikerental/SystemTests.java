@@ -15,20 +15,26 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 
 public class SystemTests {
-    // You can add attributes here
     public Database database;
+
     public Customer customer1;
     public CustomerBookingInfo bookingInfo1;
-    public BikeProvider bikeProviderA;
-    public Bike bikeA1;
-    public Booking bookingA1_1;
-    public BikeProvider bikeProviderB;
-    public BikeProvider bikeProviderC;
     public Request request1;
 
-    public BikeType hybrid = new BikeType("hybrid", new BigDecimal(100));
-    public BikeType commute = new BikeType("commute", new BigDecimal(50));
-    public BikeType mountain = new BikeType("mountain", new BigDecimal(200));
+    public BikeProvider bikeProviderA;
+    public BikeProvider bikeProviderB;
+    public BikeProvider bikeProviderC;
+
+    /*
+     * declared at top level as these are used to two use cases getQuotes and
+     * registerBikeReturn
+     */
+    public Bike bikeA1;
+    public Booking bookingA1_1;
+
+    public BikeType hybrid;
+    public BikeType commute;
+    public BikeType mountain;
 
     public DeliveryService deliveryService;
 
@@ -38,20 +44,27 @@ public class SystemTests {
         DeliveryServiceFactory.setupMockDeliveryService();
         deliveryService = DeliveryServiceFactory.getDeliveryService();
 
-        // Put your test setup here
+        // Database object to mock database calls
         database = new Database();
 
-        // Mock data setup
-        customer1 = new Customer();
-        database.addCustomer(customer1);
+        hybrid = new BikeType("hybrid", new BigDecimal(100));
+        commute = new BikeType("commute", new BigDecimal(50));
+        mountain = new BikeType("mountain", new BigDecimal(200));
 
-        bookingInfo1 = new CustomerBookingInfo("name", "phone", new Location("EH1AAA", "address1"), "surname",
-                DeliveryMethod.DELIVERY_DRIVER, DeliveryMethod.CUSTOMER);
-
+        // populate test database with example biketypes
         database.addBikeType(hybrid);
         database.addBikeType(commute);
         database.addBikeType(mountain);
 
+        // Mock customer object
+        customer1 = new Customer();
+        database.addCustomer(customer1);
+
+        // Mock bookingInfo created from customer input
+        bookingInfo1 = new CustomerBookingInfo("name", "phone", new Location("EH1AAA", "address1"), "surname",
+                DeliveryMethod.DELIVERY_DRIVER, DeliveryMethod.CUSTOMER);
+
+        // Bike Provider A - location near to customer1
         bikeProviderA = new BikeProvider(new Location("EH2AAA", "addressA"), 20.0);
 
         bikeProviderA.setRentalPrice(hybrid, new BigDecimal(20));
@@ -86,6 +99,7 @@ public class SystemTests {
         bikeProviderA.addBike(bikeA4);
         database.addBikeProvider(bikeProviderA);
 
+        // Bike Provider B - location near to customer1
         bikeProviderB = new BikeProvider(new Location("EH2AAA", "addressA"), 10.0);
 
         bikeProviderB.setRentalPrice(hybrid, new BigDecimal(20));
@@ -109,7 +123,7 @@ public class SystemTests {
         bikeProviderB.addPartner(bikeProviderA);
         database.addBikeProvider(bikeProviderB);
 
-        // In different location than the customer1
+        // Bike Provider C - In different location than the customer1
         bikeProviderC = new BikeProvider(new Location("GG2AAA", "addressA"), 5.0);
 
         bikeProviderB.setRentalPrice(hybrid, new BigDecimal(20));
@@ -130,74 +144,138 @@ public class SystemTests {
         numOfBikes.put(hybrid.toString(), 1);
         numOfBikes.put(commute.toString(), 2);
 
+        // Mock request made from customer input
         request1 = new Request(dateRange, location, numOfBikes);
-
     }
 
-    @Test
-    void getQuotesTest() {
-        Collection<Quote> quotes = customer1.getQuotes(request1, database);
+    @Nested
+    @DisplayName("Testing use case where a list of quotes is returned to the customer")
+    class getQuotesTest {
+        Collection<Quote> quotes;
 
-        assertEquals(quotes.size(), 1);
+        @BeforeEach
+        void setUp() {
+            quotes = customer1.getQuotes(request1, database);
+        }
 
-        for (Quote quote : quotes) {
-            BikeProvider bikeProvider = quote.getBikeProvider();
+        @Test
+        @DisplayName("should return collection with size equal to all the eligible bike providers")
+        void testNumOfQuotesReturned() {
+            // depends on how we set up the mock data
+            assertEquals(quotes.size(), 1);
+        }
 
-            // Check that bike provider is near to customer location
-            assert (bikeProvider.getLocation().isNearTo(request1.getLocation()));
+        @Test
+        @DisplayName("should return only bike providers that are close to the customer location")
+        void testBikeProviderLocation() {
+            for (Quote quote : quotes) {
+                BikeProvider bikeProvider = quote.getBikeProvider();
+                // Check that bike provider is near to customer location
+                assert (bikeProvider.getLocation().isNearTo(request1.getLocation()));
+            }
+        }
 
-            // Check if bike is not already booked
-            for (Bike bike : bikeProvider.getBikes()) {
-                for (Booking booking : bike.getBookings()) {
-                    assert (!(booking.getDateRange().overlaps(request1.getDateRange())));
+        @Test
+        @DisplayName("should include only bikes that are not already booked during the date range")
+        void testIfBikesAreNotBooked() {
+            for (Quote quote : quotes) {
+                BikeProvider bikeProvider = quote.getBikeProvider();
+
+                for (Bike bike : bikeProvider.getBikes()) {
+                    for (Booking booking : bike.getBookings()) {
+                        // Check if bike is not already booked
+                        assert (!(booking.getDateRange().overlaps(request1.getDateRange())));
+                    }
                 }
             }
+        }
 
-            // check if total deposit and total rental price are calculated correctly
-            assertEquals(quote.getTotalPrice().stripTrailingZeros(), new BigDecimal(120).stripTrailingZeros());
-            assertEquals(quote.getTotalDeposit().stripTrailingZeros(), new BigDecimal(40).stripTrailingZeros());
+        @Test
+        @DisplayName("should calcuate the correct total price")
+        void testTotalPrice() {
+            for (Quote quote : quotes) {
+                // check if total deposit is calculated correctly
+                assertEquals(quote.getTotalPrice().stripTrailingZeros(), new BigDecimal(120).stripTrailingZeros());
+            }
+        }
+
+        @Test
+        @DisplayName("should calcuate the correct total deposit")
+        void testTotalDeposit() {
+            for (Quote quote : quotes) {
+                // check if total deposit is calculated correctly
+                assertEquals(quote.getTotalDeposit().stripTrailingZeros(), new BigDecimal(40).stripTrailingZeros());
+            }
         }
     }
 
-    @Test
-    void bookQuoteTest() {
-        Collection<Quote> quotes = customer1.getQuotes(request1, database);
-        // get the first quote
-        Quote quote = quotes.iterator().next();
+    @Nested
+    @DisplayName("Testing use case where customer books a quote")
+    class bookQuoteTest {
+        Quote quote;
+        Booking booking;
 
-        Booking booking = customer1.bookQuote(bookingInfo1, quote);
+        @BeforeEach
+        void setUp() {
+            Collection<Quote> quotes = customer1.getQuotes(request1, database);
+            // get the first quote
+            quote = quotes.iterator().next();
+            booking = customer1.bookQuote(bookingInfo1, quote);
+        }
 
-        // first 36 chars of booking unique id should be bike provider uuid String
-        String bikeProviderUUID = booking.getUniqueID().substring(0, 36);
-        assertEquals(bikeProviderUUID, quote.getBikeProvider().getUUID());
+        @Test
+        @DisplayName("should generate booking unique id from bike provider id")
+        void testBookingUniqueId() {
+            // first 36 chars of booking unique id should be bike provider uuid String
+            // not a part of specification but crucial to our design
+            String bikeProviderUUID = booking.getUniqueID().substring(0, 36);
+            assertEquals(bikeProviderUUID, quote.getBikeProvider().getUUID());
+        }
 
-        // booking is added to customer object
-        assertEquals(customer1.getBookings().size(), 1);
+        @Test
+        @DisplayName("should add booking object to the customer")
+        void testBooking() {
+            // booking is added to customer object
+            assert (customer1.getBookings().contains(booking));
+        }
 
-        // check if booking is added to every bike selected by the customer
-        for (Bike bike : quote.getBikeProvider().getBikes()) {
-            for (Bike selectedBike : quote.getSelectedBikes()) {
-                assert (selectedBike.getBookings().contains(booking));
+        @Test
+        @DisplayName("should add booking to all the bikes booked by the customer")
+        void testIfBookingIsAddedToBikes() {
+            for (Bike bike : quote.getBikeProvider().getBikes()) {
+                for (Bike selectedBike : quote.getSelectedBikes()) {
+                    // check if booking is added to every bike selected by the customer
+                    assert (selectedBike.getBookings().contains(booking));
+                }
             }
         }
 
-        // check if pickup is created for every bike if collection method is delivery
-        if (bookingInfo1.getCollectionMethod() == DeliveryMethod.DELIVERY_DRIVER) {
-            Collection<Deliverable> pickups = deliveryService.getPickupsOn(booking.getDateRange().getStart());
+        @Test
+        @DisplayName("should create new pickup on booking start date if collection method is delivery")
+        void testIfCollectionPickupIsCreated() {
+            // check if pickup is created for every bike if collection method is delivery
+            if (bookingInfo1.getCollectionMethod() == DeliveryMethod.DELIVERY_DRIVER) {
+                Collection<Deliverable> pickups = deliveryService.getPickupsOn(booking.getDateRange().getStart());
 
-            for (Bike selectedBike : quote.getSelectedBikes()) {
-                assert (pickups.contains(selectedBike));
+                for (Bike selectedBike : quote.getSelectedBikes()) {
+                    assert (pickups.contains(selectedBike));
+                }
             }
         }
 
-        // check if pickup is created for every bike if return method is delivery
-        if (bookingInfo1.getReturnMethod() == DeliveryMethod.DELIVERY_DRIVER) {
-            Collection<Deliverable> pickups = deliveryService.getPickupsOn(booking.getDateRange().getEnd());
+        @Test
+        @DisplayName("should create new pickup on booking end date if return method is delivery")
+        void testIfReturnPickupIsCreated() {
+            // check if pickup is created for every bike if return method is delivery
+            if (bookingInfo1.getReturnMethod() == DeliveryMethod.DELIVERY_DRIVER) {
+                Collection<Deliverable> pickups = deliveryService.getPickupsOn(booking.getDateRange().getEnd());
 
-            for (Bike selectedBike : quote.getSelectedBikes()) {
-                assert (pickups.contains(selectedBike));
+                for (Bike selectedBike : quote.getSelectedBikes()) {
+                    assert (pickups.contains(selectedBike));
+                }
             }
         }
+
     }
 
     @Nested
