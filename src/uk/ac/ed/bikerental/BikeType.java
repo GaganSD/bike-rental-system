@@ -16,6 +16,13 @@ public class BikeType {
         return this.replacementValue;
     }
 
+    /**
+     * @param replacementValue the replacementValue to set
+     */
+    public void setReplacementValue(BigDecimal replacementValue) {
+        this.replacementValue = replacementValue;
+    }
+
     @Override
     public String toString() {
         return this.name;
