@@ -56,12 +56,14 @@ public class DateRange {
     @Override
     public boolean equals(Object obj) {
         // equals method for testing equality in tests
-        if (this == obj)
+        if (obj == this){
             return true;
-        if (obj == null)
+        } else if (obj == null){
+            return false; 
+        } else if (getClass() != obj.getClass()) {
             return false;
-        if (getClass() != obj.getClass())
-            return false;
+        }
+
         DateRange other = (DateRange) obj;
         return Objects.equals(end, other.end) && Objects.equals(start, other.start);
     }
