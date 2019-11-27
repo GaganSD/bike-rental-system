@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.Period;
 
 public class LinearDeprecation implements ValuationPolicy {
-    
+
     public BigDecimal calculateValue(Bike bike, LocalDate date) {
 
         LocalDate today = LocalDate.now();
@@ -25,5 +25,6 @@ public class LinearDeprecation implements ValuationPolicy {
 
 
 
+        return new BigDecimal(10);
     }
 }
