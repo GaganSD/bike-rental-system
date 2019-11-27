@@ -28,6 +28,5 @@ public class DoubleDecliningBalanceDepreciation implements ValuationPolicy {
 
         return replacementVal;
 
-
     }
 }

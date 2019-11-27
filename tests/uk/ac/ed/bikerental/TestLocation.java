@@ -22,7 +22,7 @@ class TestLocation {
     }
 
     @Test
-    void testGetAdress() {
+    void testGetAddress() {
         assert (location1.getAddress() == "address1");
     }
 
