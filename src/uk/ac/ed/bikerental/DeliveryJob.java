@@ -3,11 +3,9 @@ package uk.ac.ed.bikerental;
 import java.time.LocalDate;
 
 public class DeliveryJob {
-
-
     String address;
     String type;
-    Integer deposit;
+    BigDecimal deposit;
     LocalDate startTime;
     Integer duration;
 

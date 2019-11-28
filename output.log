@@ -3,69 +3,19 @@ Thanks for using JUnit! Support its development at https://junit.org/sponsoring
 
 ╷
 ├─ JUnit Jupiter ✔
-│  ├─ TestDateRange ✔
-│  │  ├─ testOverlapsFalse() ✘ org.opentest4j.AssertionFailedError
-│  │  ├─ testToYears1() ✔
-│  │  ├─ testToYears3() ✔
-│  │  └─ testOverlapsTrue() ✘ org.opentest4j.AssertionFailedError
-│  └─ SystemTests ✘ @BeforeAll method 'void uk.ac.ed.bikerental.SystemTests.initDatabase()' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).
 └─ JUnit Vintage ✔
 
-Failures (3):
-  JUnit Jupiter:TestDateRange:testOverlapsFalse()
-    MethodSource [className = 'uk.ac.ed.bikerental.TestDateRange', methodName = 'testOverlapsFalse', methodParameterTypes = '']
-    => org.opentest4j.AssertionFailedError
-       org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:35)
-       org.junit.jupiter.api.Assertions.fail(Assertions.java:98)
-       uk.ac.ed.bikerental.TestDateRange.testOverlapsFalse(TestDateRange.java:44)
-       java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-       java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-       java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-       java.base/java.lang.reflect.Method.invoke(Method.java:566)
-       org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:675)
-       org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
-       org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:125)
-       [...]
-  JUnit Jupiter:TestDateRange:testOverlapsTrue()
-    MethodSource [className = 'uk.ac.ed.bikerental.TestDateRange', methodName = 'testOverlapsTrue', methodParameterTypes = '']
-    => org.opentest4j.AssertionFailedError
-       org.junit.jupiter.api.AssertionUtils.fail(AssertionUtils.java:35)
-       org.junit.jupiter.api.Assertions.fail(Assertions.java:98)
-       uk.ac.ed.bikerental.TestDateRange.testOverlapsTrue(TestDateRange.java:38)
-       java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-       java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
-       java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
-       java.base/java.lang.reflect.Method.invoke(Method.java:566)
-       org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:675)
-       org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
-       org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:125)
-       [...]
-  JUnit Jupiter:SystemTests
-    ClassSource [className = 'uk.ac.ed.bikerental.SystemTests', filePosition = null]
-    => org.junit.platform.commons.JUnitException: @BeforeAll method 'void uk.ac.ed.bikerental.SystemTests.initDatabase()' must be static unless the test class is annotated with @TestInstance(Lifecycle.PER_CLASS).
-       org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.assertStatic(LifecycleMethodUtils.java:57)
-       org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.lambda$findMethodsAndAssertStatic$0(LifecycleMethodUtils.java:81)
-       java.base/java.util.ArrayList.forEach(ArrayList.java:1540)
-       java.base/java.util.Collections$UnmodifiableCollection.forEach(Collections.java:1085)
-       org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findMethodsAndAssertStatic(LifecycleMethodUtils.java:81)
-       org.junit.jupiter.engine.descriptor.LifecycleMethodUtils.findBeforeAllMethods(LifecycleMethodUtils.java:40)
-       org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.prepare(ClassBasedTestDescriptor.java:161)
-       org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.prepare(ClassBasedTestDescriptor.java:77)
-       org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$prepare$1(NodeTestTask.java:107)
-       org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
-       [...]
-
-Test run finished after 62 ms
-[         4 containers found      ]
+Test run finished after 134 ms
+[         2 containers found      ]
 [         0 containers skipped    ]
-[         4 containers started    ]
+[         2 containers started    ]
 [         0 containers aborted    ]
-[         3 containers successful ]
-[         1 containers failed     ]
-[         5 tests found           ]
+[         2 containers successful ]
+[         0 containers failed     ]
+[         0 tests found           ]
 [         0 tests skipped         ]
-[         4 tests started         ]
+[         0 tests started         ]
 [         0 tests aborted         ]
-[         2 tests successful      ]
-[         2 tests failed          ]
+[         0 tests successful      ]
+[         0 tests failed          ]
 
