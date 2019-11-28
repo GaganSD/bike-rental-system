@@ -1,6 +1,7 @@
 package uk.ac.ed.bikerental;
 
 import java.time.LocalDate;
+import java.math.BigDecimal;
 
 public class DeliveryJob {
     String address;
@@ -9,7 +10,7 @@ public class DeliveryJob {
     LocalDate startTime;
     Integer duration;
 
-    public DeliveryJob(String address, String type, Integer deposit, 
+    public DeliveryJob(String address, String type, BigDecimal deposit, 
                 LocalDate startTime, Integer duration) {
 
         this.address = address;
