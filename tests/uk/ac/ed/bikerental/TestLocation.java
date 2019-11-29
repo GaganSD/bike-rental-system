@@ -10,7 +10,6 @@ class TestLocation {
 
     @BeforeEach
     void setUp() throws Exception {
-        // TODO: setup some resources before each test
         location1 = new Location("EH1AAA", "address1");
         location2 = new Location("EH2AAA", "address2");
         location3 = new Location("EF3AAA", "address3");
