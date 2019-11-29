@@ -3,19 +3,51 @@ Thanks for using JUnit! Support its development at https://junit.org/sponsoring
 
 ╷
 ├─ JUnit Jupiter ✔
+│  ├─ TestDateRange ✔
+│  │  ├─ testOverlapsFalse() ✔
+│  │  ├─ testToYears1() ✔
+│  │  ├─ testToYears3() ✔
+│  │  └─ testOverlapsTrue() ✔
+│  ├─ TestLocation ✔
+│  │  ├─ testGetPostcode() ✔
+│  │  ├─ testIsNearToTrue() ✔
+│  │  ├─ testGetAddress() ✔
+│  │  └─ testIsNearToFalse() ✔
+│  ├─ ValuationPolicyTests ✔
+│  │  ├─ TestLinearDeprecation() ✔
+│  │  └─ TestDoubleDecliningBalanceDepreciation() ✔
+│  └─ SystemTests ✔
+│     ├─ Testing use case when bike is returned to Bike Provider ✔
+│     │  ├─ When returned to partner of original provider ✔
+│     │  │  ├─ should change status of bike to IN_PARTNER_STORE ✔
+│     │  │  └─ should create new pickup for the bike on the same day ✔
+│     │  └─ When returned to original provider ✔
+│     │     └─ should change status of bike to IN_STORE ✔
+│     ├─ Testing use case where customer books a quote ✔
+│     │  ├─ should generate booking unique id from bike provider id ✔
+│     │  ├─ should add booking object to the customer ✔
+│     │  ├─ should create new pickup on booking end date if return method is delivery ✔
+│     │  ├─ should create new pickup on booking start date if collection method is delivery ✔
+│     │  └─ should add booking to all the bikes booked by the customer ✔
+│     └─ Testing use case where a list of quotes is returned to the customer ✔
+│        ├─ should calcuate the correct total price ✔
+│        ├─ should include only bikes that are not already booked during the date range ✔
+│        ├─ should calcuate the correct total deposit ✔
+│        ├─ should return collection with size equal to all the eligible bike providers ✔
+│        └─ should return only bike providers that are close to the customer location ✔
 └─ JUnit Vintage ✔
 
-Test run finished after 134 ms
-[         2 containers found      ]
+Test run finished after 106 ms
+[        11 containers found      ]
 [         0 containers skipped    ]
-[         2 containers started    ]
+[        11 containers started    ]
 [         0 containers aborted    ]
-[         2 containers successful ]
+[        11 containers successful ]
 [         0 containers failed     ]
-[         0 tests found           ]
+[        23 tests found           ]
 [         0 tests skipped         ]
-[         0 tests started         ]
+[        23 tests started         ]
 [         0 tests aborted         ]
-[         0 tests successful      ]
+[        23 tests successful      ]
 [         0 tests failed          ]
 
